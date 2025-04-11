@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Workout Entry</title>
   <style>
-    /* same styles as before */
     * {
       margin: 0;
       padding: 0;
@@ -112,11 +111,12 @@
     <input type="date" id="dob" placeholder="Date of Birth">
     <input type="number" id="weight" placeholder="Body Weight (kg)" inputmode="numeric">
     <input type="number" id="height" placeholder="Height (cm)" inputmode="numeric">
-    <textarea id="address" placeholder="Address" rows="3"></textarea>
+    <textarea id="address" placeholder="Enter the correct adress in the format of House Name, Street Name, Area, City, State - Pincode (e.g.,thanal house , MG Road, Panampilly Nagar, Kochi, Kerala - 682036)" rows="6"></textarea>
     <input type="password" id="password" placeholder="Create Password">
     <div id="passwordError" class="error-text"></div>
     <label for="file" id="fileLabel">Choose Photo</label>
     <input type="file" id="file" accept="image/*" onchange="updateFileLabel()">
+    
     <button class="btn" onclick="checkForm()">OKAY</button>
   </div>
 
@@ -167,10 +167,9 @@
 
     function checkForm() {
       if (document.getElementById("name").value.trim() === "A") {
-        window.location.href = "inro.html";
-        return;
-      }
-
+  window.location.href = "intro.html";
+  return;
+}
       let valid = true;
       const name = document.getElementById("name");
       const insta = instaInput;
@@ -182,7 +181,24 @@
       const address = document.getElementById("address");
       const file = document.getElementById("file");
       const password = passwordInput;
+const addressText = address.value.trim().toLowerCase();
+const keralaDistricts = [
+  "thiruvananthapuram", "kollam", "pathanamthitta", "alappuzha", "kottayam",
+  "idukki", "ernakulam", "thrissur", "palakkad", "malappuram",
+  "kozhikode", "wayanad", "kannur", "kasaragod"
+];
 
+const containsValidLocation = keralaDistricts.some(district => addressText.includes(district)) ||
+                              addressText.includes("kerala") ||
+                              addressText.includes("india") ||
+                              addressText.includes("indian");
+
+if (!containsValidLocation) {
+  address.classList.add("error");
+  address.value = "";
+  address.placeholder = "Enter correct address with Kerala/India";
+  valid = false;
+}
       [name, insta, phone, email, dob, weight, height, address].forEach(input => input.classList.remove("error"));
 
       if (!name.value.trim()) { name.classList.add("error"); valid = false; }
@@ -231,8 +247,7 @@
         valid = false;
       }
 
-      if (!address.value.trim()) { address.classList.add("error"); valid = false; }
-
+if (!address.value.trim()) { address.classList.add("error"); valid = false; }
       if (!file.files.length) {
         alert("Please upload a photo.");
         valid = false;
@@ -243,48 +258,41 @@
         return;
       }
 
-      // LOCATION MATCHING HERE
-      fetch("https://ipapi.co/json/")
-        .then(res => res.json())
-        .then(data => {
-          const userAddress = address.value.toLowerCase();
-          const city = data.city?.toLowerCase() || "";
-          const region = data.region?.toLowerCase() || "";
-          const country = data.country_name?.toLowerCase() || "";
-
-          if (
-            userAddress.includes(city) ||
-            userAddress.includes(region) ||
-            userAddress.includes(country)
-          ) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-              const imageBase64 = e.target.result;
-              const userDetails = {
-                name: name.value.trim(),
-                insta: insta.value.trim(),
-                whatsapp: phone.value.trim(),
-                email: email.value.trim(),
-                dob: dob.value.trim(),
-                weight: weight.value.trim(),
-                height: height.value.trim(),
-                address: address.value.trim(),
-                photo: imageBase64,
-                password: password.value.trim()
-              };
-              localStorage.setItem("userDetails", JSON.stringify(userDetails));
-              window.location.href = "intro.html";
-            };
-            reader.readAsDataURL(file.files[0]);
-          } else {
-            alert("Entered address doesn't match your location. Please enter a correct address.");
-            address.classList.add("error");
-          }
-        })
-        .catch(() => {
-          alert("Unable to fetch location. Please check your internet.");
-        });
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const imageBase64 = e.target.result;
+        const data = {
+          name: name.value.trim(),
+          insta: insta.value.trim(),
+          whatsapp: phone.value.trim(),
+          email: email.value.trim(),
+          dob: dob.value.trim(),
+          weight: weight.value.trim(),
+          height: height.value.trim(),
+          address: address.value.trim(),
+          photo: imageBase64,
+          password: password.value.trim(),
+        };
+        localStorage.setItem("userDetails", JSON.stringify(data));
+        window.location.href = "intro.html";
+      };
+      reader.readAsDataURL(file.files[0]);
     }
+const userDetails = {
+  name: name.value.trim(),
+  insta: insta.value.trim(),
+  whatsapp: phone.value.trim(),
+  email: email.value.trim(),
+  dob: dob.value.trim(),  // <--- DOB included here
+  weight: weight.value.trim(),
+  height: height.value.trim(),
+  address: address.value.trim(),
+  photo: imageBase64,
+  password: password.value.trim()
+};
+
+localStorage.setItem("userDetails", JSON.stringify(userDetails));
+
   </script>
 </body>
 </html>
