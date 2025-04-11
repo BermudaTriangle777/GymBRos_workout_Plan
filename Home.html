@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gym Home</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', monospace;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      background: black;
+    }
+
+    html, body {
+      height: 100%;
+      background: linear-gradient(145deg, #01131f, #001018);
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      text-align: center;
+    }
+        h2 {
+      color: #00ffee;
+      font-size: 6vw;
+      margin-bottom: 25px;
+      text-shadow: 0 0 10px #00ffee88;
+    }
+      .btn {
+      width: 80%;
+      max-width: 280px;
+      margin: 10px 0;
+      padding: 14px;
+      border: none;
+      border-radius: 50px;
+      background: #00ffee;
+      color: black;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 0 10px #00ffee;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #00ddcc;
+      box-shadow: 0 0 20px #00ffee;
+    }
+
+
+.bottom-nav {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+    }
+
+    .nav-item {
+      color: white;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .nav-item.active {
+      color: #00ffee;
+    }
+
+    .nav-item i {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 3px;
+    }
+    #profile {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 10px 15px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0,255,255,0.2);
+      backdrop-filter: blur(6px);
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    #profile:hover {
+      box-shadow: 0 0 25px rgba(0,255,255,0.4);
+    }
+
+    #profile img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #00ffee;
+    }
+
+    #profileName {
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    /* Fullscreen Profile View */
+    #fullProfile {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 20, 30, 0.85);
+      backdrop-filter: blur(20px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      z-index: 99;
+      animation: fadeIn 0.3s ease;
+    }
+
+    #fullProfile img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 3px solid #00ffee;
+      object-fit: cover;
+      margin-bottom: 20px;
+      box-shadow: 0 0 20px #00ffee88;
+    }
+
+    #fullProfile h3 {
+      color: #00ffee;
+      font-size: 26px;
+      margin-bottom: 15px;
+      text-shadow: 0 0 10px #00ffee55;
+    }
+
+    #fullProfile p {
+      color: #e6ffff;
+      font-size: 17px;
+      margin: 6px 0;
+      text-align: center;
+    }
+
+    #fullProfile a {
+      color: #00ffee;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    #fullProfile a:hover {
+      text-decoration: underline;
+    }
+
+    #closeProfile {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: scale(0.95);}
+      to {opacity: 1; transform: scale(1);}
+    }
+
+    @media (max-width: 480px) {
+      h2 { font-size: 7vw; }
+      #fullProfile p { font-size: 16px; }
+    }
+  </style>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+ 
+<!-- Intro Fullscreen -->
+<div id="introScreen">
+  <audio id="typeSound" src="robo_type.mp3" preload="auto"></audio>
+  <div id="intro"></div>
+  <div id="introMotivation">YOU GOT THIS. NEVER QUIT. GRIND. HUSTLE.</div>
+</div>
+  <!-- Profile Button -->
+  <div id="profile" onclick="showProfile()">
+    <img id="profilePic" src="" alt="Profile" />
+    <div id="profileName"></div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <h2>Welcome to Gym Web</h2>
+    <button class="btn" onclick="joinGroup()">Join a Group</button>
+    <button class="btn" onclick="createGroup()">Create a Group</button>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="goHome()">
+      <i class="fas fa-home"></i>Home
+    </div>
+    <div class="nav-item" onclick="goToGroup()">
+      <i class="fas fa-users"></i>Group
+    </div>
+  </div>
+
+  <!-- Fullscreen Profile -->
+  <div id="fullProfile">
+    <button id="closeProfile" onclick="closeProfile()">×</button>
+    <img id="fpPic" src="" />
+    <h3 id="fpName">Name</h3>
+    <p id="fpAge">Age: </p>
+    <p id="fpDob"></p>
+    <p id="fpInsta"></p>
+    <p id="fpHeight"></p>
+    <p id="fpWeight"></p>
+    <p id="fpWhatsapp"></p>
+    <p id="fpEmail"></p>
+    <p id="fpAddress"></p>
+  </div>
+
+  <script>
+ 
+function startIntro() {
+  document.getElementById("tapToBeginScreen").style.display = "none";
+  typeEffect();
+}
+
+const typeSound = document.getElementById("typeSound");
+// Use a slightly longer motivation text
+const introText = `Initializing...\nWELCOME, BEAST.\nIt's time to conquer every second. No excuses. No turning back. This is YOUR moment.`;
+const introEl = document.getElementById("intro");
+const motivationEl = document.getElementById("introMotivation");
+const introScreen = document.getElementById("introScreen");
+
+let i = 0;
+
+// Dynamically calculate interval for 5s duration
+const totalDuration = 6000; // 5 seconds
+const interval = totalDuration / introText.length;
+
+function typeEffect() {
+  if (i < introText.length) {
+    const char = introText.charAt(i);
+    introEl.innerHTML += char;
+
+    // Play sound only for visible characters
+    if (char !== '\n' && char !== ' ') {
+      typeSound.currentTime = 0;
+      typeSound.play();
+    }
+
+    i++;
+    setTimeout(typeEffect, interval);
+ } else {
+    // Stop the sound after typing is done
+    typeSound.pause();
+setTimeout(() => {
+  window.location.href = "book.html";
+}, 1000); // waits 1 second before redirect
+    typeSound.currentTime = 0;
+
+    // Show motivational text
+    motivationEl.style.animation = "fadeIn 1s ease-in-out forwards";
+    setTimeout(() => {
+      introScreen.style.display = "none";
+    }, 1000); // Optional delay before removing screen
+  }
+}
+
+window.onload = () => {
+  typeEffect();
+};
+      function calculateAge(dobStr) {
+      const dob = new Date(dobStr);
+      const today = new Date();
+      let age = today.getFullYear() - dob.getFullYear();
+      const m = today.getMonth() - dob.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+        age--;
+      }
+      return age;
+    }
+
+    const storedUser = JSON.parse(localStorage.getItem("userDetails")) || {};
+
+    const user = {
+      name: storedUser.name || "Your Name",
+      email: storedUser.email || "you@example.com",
+      dob: storedUser.dob || "2000-01-01",
+      insta: storedUser.insta || "-",
+      whatsapp: storedUser.whatsapp || "-",
+      weight: storedUser.weight || "-",
+      height: storedUser.height || "-",
+      address: storedUser.address || "-",
+      photo: storedUser.photo || "https://i.ibb.co/5WymbP9/user.png"
+    };
+
+    user.age = calculateAge(user.dob);
+
+    document.getElementById("profilePic").src = user.photo;
+    document.getElementById("profileName").textContent = user.name;
+
+    function showProfile() {
+      document.getElementById("fpPic").src = user.photo;
+      document.getElementById("fpName").textContent = user.name;
+      document.getElementById("fpAge").textContent = "Age: " + user.age;
+      document.getElementById("fpEmail").textContent = "Email: " + user.email;
+
+      if (user.insta.startsWith("http")) {
+        const username = user.insta.split("instagram.com/")[1] || user.insta;
+        document.getElementById("fpInsta").innerHTML = `Instagram: <a href="${user.insta}" target="_blank">@${username}</a>`;
+      } else {
+        document.getElementById("fpInsta").textContent = "Instagram: " + user.insta;
+      }
+
+      document.getElementById("fpWhatsapp").textContent = "WhatsApp: " + user.whatsapp;
+      document.getElementById("fpHeight").textContent = "Height: " + user.height;
+      document.getElementById("fpWeight").textContent = "Weight: " + user.weight;
+      document.getElementById("fpAddress").textContent = "Address: " + user.address;
+      document.getElementById("fpDob").textContent = "DOB: " + user.dob;
+
+      document.getElementById("fullProfile").style.display = "flex";
+    }
+
+    function closeProfile() {
+      document.getElementById("fullProfile").style.display = "none";
+    }
+
+    function joinGroup() {
+      alert("Open QR scanner to join a group...");
+    }
+
+    function createGroup() {
+      alert("Redirecting to Create Group...");
+    }
+
+    function goHome() {
+      alert("Already on Home!");
+    }
+
+    function goToGroup() {
+      location.href = 'group.html';
+    }
+  </script>
+</body>
+</html>
