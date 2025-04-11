@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gym Intro</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Segoe UI', monospace;
+    }
+    #tapToBeginScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      cursor: pointer;
+    }
+    #tapToBeginScreen div {
+      color: #00ffee;
+      font-size: 1.8rem;
+      text-align: center;
+      text-shadow: 0 0 12px #00ffee;
+    }
+
+    #introScreen {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      z-index: 999;
+    }
+
+    #intro {
+      font-size: 1.6rem;
+      color: #00ffee;
+      text-shadow: 0 0 12px #00ffee, 0 0 24px #00ffee;
+      white-space: pre-wrap;
+      max-width: 90%;
+      animation: flicker 2s infinite;
+      padding: 20px;
+    }
+
+
+
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+      20%, 24%, 55% { opacity: 0.3; }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="tapToBeginScreen" onclick="startIntro()">
+    <div>TAP TO BEGIN</div>
+  </div>
+
+  <div id="introScreen">
+    <audio id="typeSound" src="robo_type.mp3" preload="auto"></audio>
+    <div id="intro"></div>
+      </div>
+
+  <script>
+    const typeSound = document.getElementById("typeSound");
+    const introText = `Initializing...\nWELCOME, BEAST.\nIt's time to conquer every second. No excuses. No turning back. This is YOUR moment.`;
+    const introEl = document.getElementById("intro");
+
+    let i = 0;
+    let totalDuration = 6000;
+
+    // Check last visit date
+    const today = new Date().toLocaleDateString();
+    const lastVisit = localStorage.getItem("introDate");
+
+    if (lastVisit === today) {
+      totalDuration = 1000;
+    } else {
+      localStorage.setItem("introDate", today);
+    }
+
+    const interval = totalDuration / introText.length;
+
+    function startIntro() {
+      document.getElementById("tapToBeginScreen").style.display = "none";
+      document.getElementById("introScreen").style.display = "flex";
+      typeEffect();
+    }
+
+    function typeEffect() {
+      if (i < introText.length) {
+        const char = introText.charAt(i);
+        introEl.innerHTML += char;
+
+        if (char !== '\n' && char !== ' ') {
+          typeSound.currentTime = 0;
+          typeSound.play();
+        }
+
+        i++;
+        setTimeout(typeEffect, interval);
+      } else {
+        typeSound.pause();
+        window.location.href = "homee.html";
+      }
+    }
+  </script>
+</body>
+</html>
